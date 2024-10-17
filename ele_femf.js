@@ -5,7 +5,7 @@
  * const $ = new Env('枫叶_饿了么福尔魔方'
  */
 
-);
+
 
 const {
     validateCarmeWithType: _0x4cfa40,
