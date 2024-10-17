@@ -2,6 +2,7 @@
  * @kolikow
  * 变量：elmck: 必填，账号cookie
  * cron: 52 0,3,6,9,12,15,18,21 * * *
+ * const $ = new Env('饿了么CK检测账密');
  */
 const $ = new Env('饿了么CK检测账密');
 const {
