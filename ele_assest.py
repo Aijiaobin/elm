@@ -1,5 +1,7 @@
 # cron: 10 1 * * *
+# ZL_CK 助力账号
 # const $ = new Env('饿了么资产推送');
+
 import json
 import os
 import random
