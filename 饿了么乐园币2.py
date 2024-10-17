@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-cron: 15 9 * * *
+cron: 15 1 * * *
 new Env('乐园币');
 """
 import hashlib

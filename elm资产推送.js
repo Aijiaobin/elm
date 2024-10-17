@@ -16,12 +16,9 @@ const {
   checkCarmeCount,
   getUserInfo,
   tryCatchPromise,
-  getCookieMap
+  getCookieMap,
+  couponNotify
 } = require("./common2.js");
-
-const {
-  sendNotify
-} = require("./sendNotify1.js");
 
 const _0x3ee842 = require("moment");
 
@@ -146,9 +143,9 @@ async function _0x2e425a(_0x46ff2a) {
     bizMethod: "queryIndex"
   };
 
-//   const _0x39444a = await _0x1df2c9(_0x46ff2a, _0x4f9ca3);
-  const _0x39444a = 100
-  return _0x39444a;
+  const _0x39444a = await _0x1df2c9(_0x46ff2a, _0x4f9ca3);
+
+  return _0x39444a.num;
 }
 
 async function _0x1df2c9(_0x396c11, _0x1e34ac) {
@@ -173,7 +170,7 @@ async function _0x1df2c9(_0x396c11, _0x1e34ac) {
   var _0x2fb2c6 = "data=" + encodeURIComponent(JSON.stringify(_0x1e34ac));
 
   const _0x4e6fdb = getToken(_0x396c11),
-        _0x460c4b = _0x4e6fdb.split("_")[0];
+      _0x460c4b = _0x4e6fdb.split("_")[0];
 
   const _0x1d360e = await sign(_0x460c4b + "&" + _0x9ef4df + "&" + _0x582767 + "&" + JSON.stringify(_0x1e34ac), _0x46e8ae);
 
@@ -183,37 +180,26 @@ async function _0x1df2c9(_0x396c11, _0x1e34ac) {
     headers: _0x1c07f0,
     body: _0x2fb2c6
   };
-
   return tryCatchPromise(_0x46952e => {
     _0x43a291(_0x26d10c, async (_0x1ea0a1, _0x266ff8, _0x582388) => {
       if (!_0x1ea0a1 && _0x266ff8.statusCode == 200) {
         try {
           const _0x3cb15f = JSON.parse(_0x582388);
 
-          if (_0x3cb15f.data && _0x3cb15f.data.data) {
-            const _0x470a8b = JSON.parse(_0x3cb15f.data.data);
-            _0x46952e(_0x470a8b);
-          } else {
-            console.log("Error: data or data.data is missing in response");
-            console.log("Response body:", _0x582388);
-            console.log("Error code:", _0x3cb15f.data.errorCode);
-            console.log("Error message:", _0x3cb15f.data.errorMsg);
-            _0x46952e(null);
-          }
+          const _0x470a8b = JSON.parse(_0x3cb15f.data.data);
+
+          _0x46952e(_0x470a8b);
         } catch (_0x1d36db) {
-          console.log("Error parsing response:", _0x1d36db);
-          console.log("Response body:", _0x582388);
+          console.log(_0x582388);
+
           _0x46952e(null);
         }
       } else {
-        console.log("Request failed with status code:", _0x266ff8.statusCode);
-        console.log("Response body:", _0x582388);
         _0x46952e(null);
       }
     });
   });
 }
-
 
 async function _0xf7ccac(_0x1e0e27, _0x54f7f5) {
   const _0x4e034e = {
@@ -244,7 +230,7 @@ async function _0xf7ccac(_0x1e0e27, _0x54f7f5) {
   var _0x1a5ddd = "data=" + encodeURIComponent(JSON.stringify(_0x1d1a7b));
 
   const _0x267792 = getToken(_0x1e0e27),
-        _0x1c4025 = _0x267792.split("_")[0];
+      _0x1c4025 = _0x267792.split("_")[0];
 
   const _0x26ba75 = await sign(_0x1c4025 + "&" + _0xa0411f + "&" + _0x2b5c72 + "&" + JSON.stringify(_0x1d1a7b), _0x46e8ae);
 
@@ -287,19 +273,22 @@ async function _0xf7ccac(_0x1e0e27, _0x54f7f5) {
 
 async function _0x378f6c(_0x429356, _0x16a72b) {
   const _0x220a27 = getCookieMap(_0x429356);
+  await couponNotify("饿了么资产推送", _0x16a72b, {
+    uid: _0x220a27.get("wxUid")
+  });
 
-  if (!_0x220a27.has("wxUid")) {
-    console.log("没有获取到推送 uid，不推送消息\n");
-  } else {
-    await sendNotify("饿了么资产推送", _0x16a72b, {
-      uid: _0x220a27.get("wxUid")
-    });
-  }
+  // if (!_0x220a27.has("wxUid")) {
+  //   console.log("没有获取到推送 uid，不推送消息\n");
+  // } else {
+  //   await sendNotify("饿了么资产推送", _0x16a72b, {
+  //     uid: _0x220a27.get("wxUid")
+  //   });
+  // }
 }
 
 async function _0x163ae7() {
   await validateCarmeWithType(_0x46e8ae, 1);
-
+  let _0x3ec5bd_accumulated = ""; // 用于累加 _0x3ec5bd 的内容
   for (let _0x3913fc = 0; _0x3913fc < _0x31839a.length; _0x3913fc++) {
     let _0x1e1848 = _0x31839a[_0x3913fc];
     _0x1e1848 = await checkCk(_0x1e1848);
@@ -319,8 +308,8 @@ async function _0x163ae7() {
     await checkCarmeCount(_0x46e8ae, _0x4feeeb, _0xf58a19);
     console.log("******开始【饿了么账号", _0x3913fc + 1, "】", _0x17b596.encryptMobile, "*********");
 
-    // let _0x42bffc = await _0x1fb425(_0x1e1848);
-    let _0x42bffc = 1000 ;
+    let _0x42bffc = await _0x1fb425(_0x1e1848);
+
     if (_0x42bffc != null) {
       _0x42bffc = _0x55733f;
     } else {
@@ -356,24 +345,24 @@ async function _0x163ae7() {
     if (!_0x30b429) {
       _0x30b429 = _0x55733f;
     }
-
-    var _0x4b0682 = await _0x2e425a(_0x1e1848);
-
-    if (!_0x4b0682) {
-      _0x4b0682 = _0x55733f;
-    }
+    //
+    // var _0x4b0682 = await _0x2e425a(_0x1e1848);
+    //
+    // if (!_0x4b0682) {
+    //   _0x4b0682 = _0x55733f;
+    // }
 
     console.log("乐园币：" + _0x30b429);
-    console.log("当前乐园币：" + _0x4b0682);
+    // console.log("当前乐园币：" + _0x4b0682);
     console.log("总吃货豆：" + _0x524645);
     console.log("余额：" + _0x42bffc);
 
-    var _0x3ec5bd = "###资产推送\n" + _0x2c5f85 + "|" + _0x17b596.encryptMobile + "|" + _0x30b429 + "/" + _0x4b0682 + "|" + _0x524645 + "|" + _0x42bffc + "|";
-
-    await _0x378f6c(_0x1e1848, _0x3ec5bd);
+    // var _0x3ec5bd = "###资产推送\n" + _0x2c5f85 + "|" + _0x17b596.encryptMobile + "|" + _0x30b429 + "/" + _0x4b0682 + "|" + _0x524645 + "|" + _0x42bffc + "|";
+    var _0x3ec5bd  = `开始【饿了么账号 ${_0x3913fc + 1}】 ${_0x17b596.encryptMobile} \n乐园币：${_0x30b429}\n总吃货豆：${_0x524645}\n余额：${_0x42bffc}`;
+    _0x3ec5bd_accumulated += _0x3ec5bd; // 累加 _0x3ec5bd 的内容
     await wait(10);
   }
-
+  await _0x378f6c("饿了么乐园币", _0x3ec5bd_accumulated); // 推送累加的内容
   process.exit(0);
 }
 
@@ -494,18 +483,18 @@ function Env(t, e) {
         r = r ? 1 * r : 20;
         r = e && e.timeout ? e.timeout : r;
         const [o, h] = i.split("@"),
-              n = {
-          url: `http://${h}/v1/scripting/evaluate`,
-          body: {
-            script_text: t,
-            mock_type: "cron",
-            timeout: r
-          },
-          headers: {
-            "X-Key": o,
-            Accept: "*/*"
-          }
-        };
+            n = {
+              url: `http://${h}/v1/scripting/evaluate`,
+              body: {
+                script_text: t,
+                mock_type: "cron",
+                timeout: r
+              },
+              headers: {
+                "X-Key": o,
+                Accept: "*/*"
+              }
+            };
         this.post(n, (t, e, i) => s(i));
       }).catch(t => this.logErr(t));
     }
@@ -519,9 +508,9 @@ function Env(t, e) {
         this.fs = this.fs ? this.fs : require("fs");
         this.path = this.path ? this.path : require("path");
         const t = this.path.resolve(this.dataFile),
-              e = this.path.resolve(process.cwd(), this.dataFile),
-              s = this.fs.existsSync(t),
-              i = !s && this.fs.existsSync(e);
+            e = this.path.resolve(process.cwd(), this.dataFile),
+            s = this.fs.existsSync(t),
+            i = !s && this.fs.existsSync(e);
 
         if (!s && !i) {
           return {};
@@ -544,10 +533,10 @@ function Env(t, e) {
         this.fs = this.fs ? this.fs : require("fs");
         this.path = this.path ? this.path : require("path");
         const t = this.path.resolve(this.dataFile),
-              e = this.path.resolve(process.cwd(), this.dataFile),
-              s = this.fs.existsSync(t),
-              i = !s && this.fs.existsSync(e),
-              r = JSON.stringify(this.data);
+            e = this.path.resolve(process.cwd(), this.dataFile),
+            s = this.fs.existsSync(t),
+            i = !s && this.fs.existsSync(e),
+            r = JSON.stringify(this.data);
         s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r);
       }
     }
@@ -572,7 +561,7 @@ function Env(t, e) {
 
       if (/^@/.test(t)) {
         const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t),
-              r = s ? this.getval(s) : "";
+            r = s ? this.getval(s) : "";
 
         if (r) {
           try {
@@ -592,8 +581,8 @@ function Env(t, e) {
 
       if (/^@/.test(e)) {
         const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e),
-              o = this.getval(i),
-              h = i ? "null" === o ? null : o || "{}" : "{}";
+            o = this.getval(i),
+            h = i ? "null" === o ? null : o || "{}" : "{}";
 
         try {
           const e = JSON.parse(h);
@@ -827,7 +816,7 @@ function Env(t, e) {
 
     done(t = {}) {
       const e = new Date().getTime(),
-            s = (e - this.startTime) / 1000;
+          s = (e - this.startTime) / 1000;
       this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`);
       this.log();
       (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t);
