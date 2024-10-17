@@ -1,11 +1,10 @@
 /**
- * @平行绳 飞机频道：https://t.me/tigerorrose
- * 变量：elmck: 必填，账号cookie，短信登录面板项目地址：https://github.com/funaihui/eleWeb
- * cron 0 0 11 * * *
- * 2023.6.26 更新：首次发布；
- * 2023.7.7 更新：添加延时，增加 cookie 失效验证
+ * @kolikow
+ * 变量：elmck: 必填，账号cookie
+ * cron: 52 5 * * *
  */
 
+const $ = new Env('饿了么特级厨师');
 const {
   "sign": sign,
   "getToken": getToken,

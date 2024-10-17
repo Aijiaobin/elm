@@ -1,3 +1,5 @@
+# cron: 10 4 * * *
+# new Env('饿了么跳一跳');
 import json
 import os
 import random

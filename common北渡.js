@@ -739,6 +739,7 @@ async function checkCookie(cookie) {
 }
 
 async function _0x21a086(ck1) {
+
     const ck = tq1(ck1);
     const deviceId = ck['deviceId'];
     const userId = ck['USERID'];
@@ -758,7 +759,6 @@ async function _0x21a086(ck1) {
     };
 
     const re = await resq(ck1, 'com.taobao.mtop.mloginunitservice.autologin', data);
-    
     if (re !== null) {
         const msg = "token版刷新成功";
         return { msg, result: re };

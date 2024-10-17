@@ -1,3 +1,5 @@
+# cron: 10 3 * * *
+# new Env('饿了么光轮蓝骑士');
 import json
 import os
 import random

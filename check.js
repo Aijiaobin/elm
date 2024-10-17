@@ -1,3 +1,9 @@
+/**
+ * @kolikow
+ * 变量：elmck: 必填，账号cookie
+ * cron: 52 0,8,10,14,18,22 * * *
+ */
+const $ = new Env('饿了么CK检测账密');
 const {
     getEnvsByName,
     DisableCk,
@@ -15,7 +21,7 @@ const {
     getUserInfo,
     runOne,
     getCookieMap
-} = require("./common.js");
+} = require("./common北渡.js");
 
 const _0x11f78e = require("moment");
 

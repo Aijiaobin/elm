@@ -7,7 +7,7 @@ const {
   cookiesToMap,
   elmRequestByApi,
   elmRequestByH5
-} = require('./comm');
+} = require('./commom北渡.js');
 
 
 class Task {
