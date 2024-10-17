@@ -14,7 +14,8 @@ const {
   getCookies,
   checkCarmeCount,
   getUserInfo,
-  tryCatchPromise
+  tryCatchPromise,
+  couponNotify
 } = require("./common2.js");
 
 const request = require("request");
@@ -135,7 +136,8 @@ async function start() {
   }
 
   // 调用 pushPlusNotify 发送通知
-  await pushPlusNotify("饿了吗领券结果", resultMessage);
+  await couponNotify("饿了么资产推送", resultMessage);
+  // await pushPlusNotify("饿了吗领券结果", resultMessage);
 
   process.exit(0);
 }
