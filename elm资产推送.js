@@ -277,6 +277,9 @@ async function _0x378f6c(_0x429356, _0x16a72b) {
     uid: _0x220a27.get("wxUid")
   });
 
+    await pushPlusNotify("饿了么资产推送", _0x16a72b, {
+    uid: _0x220a27.get("wxUid")
+  });
   // if (!_0x220a27.has("wxUid")) {
   //   console.log("没有获取到推送 uid，不推送消息\n");
   // } else {
