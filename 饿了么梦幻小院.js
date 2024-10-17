@@ -21,7 +21,7 @@ const {
     "checkCk": checkCk,
     "getUserInfo": getUserInfo,
     "wait": wait
-} = require("./common.js");
+} = require("./common2.js");
 const _0xd960c1 = require("request");
 const md5 = require("md5");
 let _0x244760 = 1;
