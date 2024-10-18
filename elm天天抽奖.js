@@ -2,6 +2,8 @@
  * 测试-增加进度显示
  * 卡密变量：ELE_TTCJ_CARME 填自己购买的卡密。
  * 需要设置环境变量 ownCookie 这个是需要助力账号的 cookie。
+ * cron: 5 1 * * *
+ * const $ = new Env('天天抽奖');
  */
 const {
   'sign': sign,
