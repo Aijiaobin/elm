@@ -572,7 +572,7 @@ async function _0x163ae7() {
     //   _0x4b0682 = _0x55733f;
     // }
 
-    console.log("乐园币：" + _0x30b429);
+    console.log("今日乐园币：" + _0x30b429);
     console.log("当前乐园币：" + _0x4b0682);
     console.log("总吃货豆：" + _0x524645);
     console.log("余额：" + _0x42bffc);
