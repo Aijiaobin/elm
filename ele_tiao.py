@@ -9,13 +9,13 @@ import requests
 from urllib.parse import quote
 
 host = 'https://acs.m.goofish.com'
-
+urlsigun = os.environ.get('urlsigun')
 ck = ''
-
 
 import json
 import random
 import string
+
 
 def 取中间文本(html, start_str, end):
     start = html.find(start_str)
@@ -25,24 +25,25 @@ def 取中间文本(html, start_str, end):
         if end >= 0:
             return html[start:end].strip()
 
+
 def generate_random_string(length=50):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
 def get_ck_usid(ck1):
-    #print(ck1)
-    #id = 取中间文本(ck1, "USERID=",";")
-    #if id != "":
-        #return id
-    #else:
-        #return '账号'
-    
+    # print(ck1)
+    # id = 取中间文本(ck1, "USERID=",";")
+    # if id != "":
+    # return id
+    # else:
+    # return '账号'
+
     key_value_pairs = ck1.split(";")
     for pair in key_value_pairs:
         if pair.find("==") == -1:
             key, value = pair.split("=")
             if key == "USERID":
-               return value
+                return value
             else:
                 return '账号'
 
@@ -83,7 +84,7 @@ class TYT:
 
         try:
             r = requests.post(
-                "接口",
+                urlsigun,
                 json=body
             )
             r.raise_for_status()

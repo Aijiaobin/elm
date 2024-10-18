@@ -1,5 +1,6 @@
 # cron: 10 3 * * *
-# new Env('饿了么光轮蓝骑士');
+# new Env('饿了么助力浇水');
+# urlsigun 变量
 import json
 import os
 import random
@@ -9,7 +10,7 @@ from urllib.parse import quote
 from datetime import datetime, date
 
 nczlck = os.environ.get('elmck')
-
+urlsigun = os.environ.get('urlsigun')
 ck = ''
 
 def tq(txt):
@@ -37,7 +38,7 @@ class LYB:
         self.name1 = self.uid
 
     def xsign(self, api, data, wua, v):
-        url = "接口"
+        url = urlsigun
         body = {
             "data": data,
             "api": api,
