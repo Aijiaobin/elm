@@ -578,7 +578,7 @@ async function _0x163ae7() {
     console.log("余额：" + _0x42bffc);
 
     // var _0x3ec5bd = "###资产推送\n" + _0x2c5f85 + "|" + _0x17b596.encryptMobile + "|" + _0x30b429 + "/" + _0x4b0682 + "|" + _0x524645 + "|" + _0x42bffc + "|";
-    var _0x3ec5bd  = `开始【饿了么账号 ${_0x3913fc + 1}】 ${_0x17b596.encryptMobile} \n乐园币：${_0x30b429}\n总吃货豆：${_0x524645}\n余额：${_0x42bffc}`;
+    var _0x3ec5bd  = `开始【饿了么账号 ${_0x3913fc + 1}】 ${_0x17b596.encryptMobile} \n总乐园币：${_0x4b0682}\n乐园币：${_0x30b429}\n总吃货豆：${_0x524645}\n余额：${_0x42bffc}\n`;
     _0x3ec5bd_accumulated += _0x3ec5bd; // 累加 _0x3ec5bd 的内容
     await wait(10);
   }
