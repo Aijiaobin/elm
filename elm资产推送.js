@@ -1,3 +1,221 @@
+const request = require('request');
+const crypto = require('crypto');
+
+const host = 'https://acs.m.goofish.com';
+
+let ck = '';
+
+function hbh5tk(tk_cookie, enc_cookie, cookie_str) {
+    let txt = cookie_str.replace(/\s/g, '');
+    if (txt[txt.length - 1] !== ';') {
+        txt += ';';
+    }
+    let cookie_parts = txt.split(';').slice(0, -1);
+    let updated = false;
+    for (let i = 0; i < cookie_parts.length; i++) {
+        let key_value = cookie_parts[i].split('=');
+        if (key_value[0].trim() === "_m_h5_tk" || key_value[0].trim() === " _m_h5_tk") {
+            cookie_parts[i] = tk_cookie;
+            updated = true;
+        } else if (key_value[0].trim() === "_m_h5_tk_enc" || key_value[0].trim() === " _m_h5_tk_enc") {
+            cookie_parts[i] = enc_cookie;
+            updated = true;
+        }
+    }
+
+    if (updated) {
+        return cookie_parts.join(';') + ';';
+    } else {
+        return txt + tk_cookie + ';' + enc_cookie + ';';
+    }
+}
+
+function tq(cookie_string) {
+    if (!cookie_string) {
+        return '-1';
+    }
+    let cookie_pairs = cookie_string.split(';');
+    for (let pair of cookie_pairs) {
+        let key_value = pair.split('=');
+        if (key_value[0].trim() === "_m_h5_tk" || key_value[0].trim() === " _m_h5_tk") {
+            return key_value[1];
+        }
+    }
+    return '-1';
+}
+
+function md5(text) {
+    return crypto.createHash('md5').update(text).digest('hex');
+}
+
+function check_cookie(cookie) {
+    let url = "https://waimai-guide.ele.me/h5/mtop.alsc.personal.queryminecenter/1.0/?jsv=2.6.2&appKey=12574478";
+    let headers = {
+        "Cookie": cookie,
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36"
+    };
+
+    return new Promise((resolve, reject) => {
+        request.get(url, { headers: headers }, (error, response, body) => {
+            if (error) {
+                console.log("解析ck错误");
+                return resolve(null);
+            }
+            if (response.statusCode === 200) {
+                let cookie_jar = response.headers['set-cookie'];
+                let token = cookie_jar.find(c => c.startsWith('_m_h5_tk=')).split('=')[1].split(';')[0];
+                let token_cookie = "_m_h5_tk=" + token;
+                let enc_token = cookie_jar.find(c => c.startsWith('_m_h5_tk_enc=')).split('=')[1].split(';')[0];
+                let enc_token_cookie = "_m_h5_tk_enc=" + enc_token;
+                cookie = hbh5tk(token_cookie, enc_token_cookie, cookie);
+                return resolve(cookie);
+            } else {
+                return resolve(null);
+            }
+        });
+    });
+}
+
+class LYB {
+    constructor(cki) {
+        this.ck = cki;
+        this.name = null;
+        this.cki = this.tq(cki);
+        this.uid = this.cki.unb; // 直接访问对象的属性
+        this.sid = this.cki.cookie2; // 直接访问对象的属性
+        this.name1 = this.uid;
+    }
+
+    tq(txt) {
+        try {
+            txt = txt.replace(/\s/g, '');
+            let pairs = txt.split(';').slice(0, -1);
+            let ck_json = {};
+            for (let i of pairs) {
+                let key_value = i.split('=');
+                ck_json[key_value[0]] = key_value[1];
+            }
+            return ck_json;
+        } catch (e) {
+            console.log(`❎Cookie解析错误: ${e}`);
+            return {};
+        }
+    }
+
+    async req(api, data, v = "1.0") {
+        try {
+            let cookie = await check_cookie(this.ck);
+            let headers = {
+                "authority": "shopping.ele.me",
+                "accept": "application/json",
+                "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+                "cache-control": "no-cache",
+                "content-type": "application/x-www-form-urlencoded",
+                "cookie": cookie,
+                "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36"
+            };
+            let timestamp = Date.now();
+            let data_str = JSON.stringify(data);
+            let token = tq(cookie);
+            let token_part = token.split('_')[0];
+
+            let sign_str = `${token_part}&${timestamp}&12574478&${data_str}`;
+            let sign = md5(sign_str);
+            let url = `https://guide-acs.m.taobao.com/h5/${api}/${v}/?jsv=2.6.1&appKey=12574478&t=${timestamp}&sign=${sign}&api=${api}&v=${v}&type=originaljson&dataType=json`;
+            let data1 = `data=${encodeURIComponent(data_str)}`;
+
+            return new Promise((resolve, reject) => {
+                request.post({ url: url, headers: headers, body: data1 }, (error, response, body) => {
+                    if (error) {
+                        return resolve(null);
+                    }
+                    if (response) {
+                        return resolve(response);
+                    } else {
+                        return resolve(null);
+                    }
+                });
+            });
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async login() {
+        let api1 = 'mtop.alsc.user.detail.query';
+        let data1 = {};
+        try {
+            let res1 = await this.req(api1, data1, "1.0");
+            if (res1.body && JSON.parse(res1.body).ret[0] === 'SUCCESS::调用成功') {
+                this.name = JSON.parse(res1.body).data.encryptMobile;
+                let api = 'mtop.koubei.interaction.center.common.queryintegralproperty.v2';
+                let data = { "templateIds": "[\"1404\"]" };
+                try {
+                    let res = await this.req(api, data, "1.0");
+                    if (res.body && JSON.parse(res.body).ret[0] === 'SUCCESS::调用成功') {
+                        // console.log(`[${this.name}] ✅登录成功,乐园币----[${JSON.parse(res.body).data.data["1404"].count}]`);
+                        return JSON.parse(res.body).data.data["1404"].count;
+                    } else {
+                        if (res.body && JSON.parse(res.body).ret[0] === 'FAIL_SYS_SESSION_EXPIRED::Session过期') {
+                            console.log(`[${this.name1}] ❎cookie已过期，请重新获取`);
+                            return null;
+                        } else {
+                            console.log(`[${self.name1}] ❌登录失败,原因:${res.body}`);
+                            return null;
+                        }
+                    }
+                } catch (e) {
+                    console.log(`[${self.name1}] ❎登录失败: ${e}`);
+                    return null;
+                }
+            } else {
+                if (res1.body && JSON.parse(res1.body).ret[0] === 'FAIL_SYS_SESSION_EXPIRED::Session过期') {
+                    console.log(`[${self.name1}] ❎cookie已过期，请重新获取`);
+                    return null;
+                } else {
+                    console.log(`[${self.name1}] ❌登录失败,原因:${res1.body}`);
+                    return null;
+                }
+            }
+        } catch (e) {
+            console.log(`[${self.name1}] ❎登录失败: ${e}`);
+            return null;
+        }
+    }
+
+    async main() {
+        try {
+            if (await this.login()) {
+                console.log("获取成功");
+            }
+        } catch (e) {
+            console.log(`❌任务失败: ${e}`);
+        }
+    }
+}
+
+async function _0x2e425a(cookie) {
+    let lyb = new LYB(cookie);
+    return await lyb.login();
+}
+
+// (async () => {
+//     let cookie = process.env.elmck || ck;
+//     if (cookie === "") {
+//         console.log("本地变量为空，请设置其中一个变量后再运行");
+//         process.exit(-1);
+//     }
+//     let cookies = cookie.split("&");
+//     console.log(`饿了么共获取到 ${cookies.length} 个账号`);
+//     for (let i = 0; i < cookies.length; i++) {
+//         console.log(`======开始第${i + 1}个账号======`);
+//         var _0x4b0682 = await _0x2e425a(cookies[i]);
+//         console.log(`登录成功,乐园币----[${_0x4b0682}]`);
+//         console.log("2s后进行下一个账号");
+//         await new Promise(resolve => setTimeout(resolve, 2000));
+//     }
+// })();
+
 /**
  * @kolikow
  * cron: 0 8,20 * * *
@@ -25,7 +243,7 @@ const _0x3ee842 = require("moment");
 const _0x43a291 = require("request");
 
 const _0xf58a19 = 10;
-const _0x55733f = "异常";
+const _0x55733f = "0";
 
 let _0x31839a = getCookies();
 
@@ -136,17 +354,17 @@ async function _0xc1502e(_0x160c7f) {
   });
 }
 
-async function _0x2e425a(_0x46ff2a) {
-  const _0x4f9ca3 = {
-    bizScene: "IDIOM",
-    bizParam: "{\"type\":\"ggetGold\"}",
-    bizMethod: "queryIndex"
-  };
-
-  const _0x39444a = await _0x1df2c9(_0x46ff2a, _0x4f9ca3);
-
-  return _0x39444a.num;
-}
+// async function _0x2e425a(_0x46ff2a) {
+//   const _0x4f9ca3 = {
+//     bizScene: "IDIOM",
+//     bizParam: "{\"type\":\"ggetGold\"}",
+//     bizMethod: "queryIndex"
+//   };
+//
+//   const _0x39444a = await _0x1df2c9(_0x46ff2a, _0x4f9ca3);
+//
+//   return _0x39444a.num;
+// }
 
 async function _0x1df2c9(_0x396c11, _0x1e34ac) {
   const _0x1c07f0 = {
@@ -346,14 +564,16 @@ async function _0x163ae7() {
       _0x30b429 = _0x55733f;
     }
     //
-    // var _0x4b0682 = await _0x2e425a(_0x1e1848);
+
+    // console.log(_0x1e1848);
+    var _0x4b0682 = await _0x2e425a(_0x1e1848);
     //
     // if (!_0x4b0682) {
     //   _0x4b0682 = _0x55733f;
     // }
 
     console.log("乐园币：" + _0x30b429);
-    // console.log("当前乐园币：" + _0x4b0682);
+    console.log("当前乐园币：" + _0x4b0682);
     console.log("总吃货豆：" + _0x524645);
     console.log("余额：" + _0x42bffc);
 

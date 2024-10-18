@@ -1,7 +1,7 @@
 /**
  * @kolikow
  * 变量：elmck: 必填，账号cookie
- * cron: 52 2 * * *
+ * cron: 52 2,4,6 * * *
  * const $ = new Env('饿了么合成甜蜜蜜');
  */
 

@@ -1,4 +1,4 @@
-# cron: 10 2 * * *
+# cron: 10 2,3 * * *
 # const $ = new Env('饿了么卡皮巴拉小餐车');
 import logging
 import os
