@@ -1,3 +1,6 @@
+# cron: 2 3,5 * * *
+# new Env('饿了么助力浇水');
+# urlsigun 变量
 import json
 import os
 import random
