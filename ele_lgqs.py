@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # cron: 10 3 * * *
 # const $ = new Env('饿了么光轮蓝骑士');
+# urlsigun 变量
 import hashlib
 import os
 import re

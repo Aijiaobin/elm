@@ -1,7 +1,7 @@
 # cron: 10 1 * * *
 # ZL_CK 助力账号
-# const $ = new Env('饿了么资产推送');
-
+# const $ = new Env('饿了么助力推送');
+# urlsigun 变量
 import json
 import os
 import random
@@ -10,7 +10,9 @@ import requests
 from urllib.parse import quote
 
 host = 'https://acs.m.goofish.com'
-xsign_host = "接口"
+urlsigun = os.environ.get('urlsigun')
+xsign_host = urlsigun
+
 
 class LYB:
     def __init__(self, cki):
@@ -109,6 +111,7 @@ class LYB:
             cki = self.tq(os.environ.get('ZL_CK'))
         else:
             cki = self.tq(self.ck)
+
         if not cki:
             print("❎被助力账号为空，请设置后再运行")
             return None, None
@@ -188,6 +191,7 @@ class LYB:
             cki = self.tq(os.environ.get('ZL_CK'))
         else:
             cki = self.tq(self.ck)
+
         if not cki:
             print("被助力账号为空，请设置后再运行")
             return
@@ -255,9 +259,8 @@ class LYB:
         return False
 
 
-
 def get_ck_usid(ck):
-    ck1 = ck.replace("==","")
+    ck1 = ck.replace("==", "")
     key_value_pairs = ck1.split(";")
     for pair in key_value_pairs:
         if '=' not in pair:
@@ -272,7 +275,7 @@ if __name__ == '__main__':
     today = datetime.date.today()
     today_str = today.strftime('%Y%m%d')
     filename = f'{today_str}.json'
-    
+
     if not os.path.exists(filename):
         with open(filename, 'w') as f:
             json.dump({}, f)
@@ -282,7 +285,6 @@ if __name__ == '__main__':
 
     with open(filename, 'r') as file:
         data = json.load(file)
-
 
     ck = os.environ.get('elmck')
     ck_list = ck.split("&") if ck else []
@@ -302,7 +304,7 @@ if __name__ == '__main__':
         print(f"🐂🍺>>>开始给第{dzl_num}/{len(ck_list)}个账号助力->获取邀请码成功->>")
 
         for i, ck in enumerate(ck_list):
-            if len(ck) >200:
+            if len(ck) > 200:
                 usid = get_ck_usid(ck)
                 zlcs = data.get(f"{usid}", 0)
                 if zlcs < 3:
@@ -312,13 +314,13 @@ if __name__ == '__main__':
                         if a is None:
                             continue
                         elif a == 'SX':
-                            
+
                             break
                         else:
                             data[f"{usid}"] = zlcs + 1
                             with open(filename, 'w') as file:
                                 json.dump(data, file, indent=4)
-                        
+
                     except Exception as e:
                         print(f"❎助力时发生错误: {e}")
                         continue
