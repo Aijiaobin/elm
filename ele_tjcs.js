@@ -1,7 +1,7 @@
 /**
  * @kolikow
  * 变量：elmck: 必填，账号cookie
- * cron: 52 5 * * *
+ * cron: 52 2,4,8,12 * * *
  * const $ = new Env('饿了么特级厨师');
  */
 
