@@ -761,6 +761,7 @@ async function _0x21a086(ck1) {
 
     const re = await resq(ck1, 'com.taobao.mtop.mloginunitservice.autologin', data);
     if (re !== null) {
+    // if (re == null) {
         const msg = "token版刷新成功";
         return { msg, result: re };
     } else {
@@ -775,44 +776,133 @@ async function _0x21a086(ck1) {
         }
     }
 }
+const fs = require('fs');
+const path = require('path');
+const faker = require('faker');
+
+const deviceInfoFilePath = path.join(__dirname, 'deviceInfo.json');
+
+// 维护品牌和型号的对应关系
+const deviceBrandsAndModels = {
+    Apple: [
+        'iPhone 12', 'iPhone 13', 'iPhone SE', 'iPhone 11', 'iPhone XR',
+        'iPhone 12 Pro', 'iPhone 13 Pro', 'iPhone 12 Mini', 'iPhone 13 Mini',
+        'iPhone XS', 'iPhone XS Max', 'iPhone X', 'iPhone 8', 'iPhone 8 Plus'
+    ],
+    Samsung: [
+        'Galaxy S21', 'Galaxy Note 20', 'Galaxy A52', 'Galaxy S20', 'Galaxy S20+',
+        'Galaxy S20 Ultra', 'Galaxy S10', 'Galaxy S10+', 'Galaxy S10e', 'Galaxy Note 10',
+        'Galaxy Note 10+', 'Galaxy A71', 'Galaxy A51', 'Galaxy A31', 'Galaxy A21',
+        'Galaxy A11', 'Galaxy M31', 'Galaxy M21', 'Galaxy M11', 'Galaxy M01'
+    ],
+    Xiaomi: [
+        'Redmi Note 10', 'Mi 11', 'Poco X3', 'Redmi 9', 'Redmi 9A',
+        'Redmi 9C', 'Redmi Note 9', 'Redmi Note 9 Pro', 'Redmi Note 9S', 'Redmi Note 8',
+        'Redmi Note 8 Pro', 'Mi 10', 'Mi 10T', 'Mi 10T Pro', 'Mi 9',
+        'Mi 9T', 'Mi 9T Pro', 'Poco F2 Pro', 'Poco X2', 'Poco M2 Pro'
+    ],
+    Huawei: [
+        'P40 Pro', 'Mate 40', 'Nova 8', 'P30 Pro', 'Mate 30',
+        'Nova 7', 'Nova 7 Pro', 'Nova 6', 'Nova 6 5G', 'P20 Pro',
+        'Mate 20', 'Mate 20 Pro', 'Nova 5T', 'Nova 5i Pro', 'Nova 5',
+        'Nova 4', 'Nova 3', 'Nova 3i', 'P Smart 2021', 'P Smart Pro'
+    ],
+    Google: [
+        'Pixel 5', 'Pixel 4a', 'Pixel 6', 'Pixel 4', 'Pixel 4 XL',
+        'Pixel 3', 'Pixel 3 XL', 'Pixel 3a', 'Pixel 3a XL', 'Pixel 2',
+        'Pixel 2 XL', 'Pixel', 'Pixel XL', 'Pixel 5a', 'Pixel 4a 5G'
+    ],
+    OnePlus: [
+        'OnePlus 9', 'OnePlus 8T', 'OnePlus Nord', 'OnePlus 8', 'OnePlus 8 Pro',
+        'OnePlus 7T', 'OnePlus 7T Pro', 'OnePlus 7', 'OnePlus 7 Pro', 'OnePlus 6T',
+        'OnePlus 6', 'OnePlus 5T', 'OnePlus 5', 'OnePlus 3T', 'OnePlus 3',
+        'OnePlus 2', 'OnePlus X', 'OnePlus One', 'OnePlus Nord CE', 'OnePlus Nord N10'
+    ],
+    Sony: [
+        'Xperia 1 II', 'Xperia 5 II', 'Xperia 10 II', 'Xperia 1', 'Xperia 5',
+        'Xperia 10', 'Xperia L4', 'Xperia L3', 'Xperia L2', 'Xperia L1',
+        'Xperia XZ3', 'Xperia XZ2', 'Xperia XZ1', 'Xperia XZ Premium', 'Xperia XZ'
+    ],
+    LG: [
+        'G8 ThinQ', 'V50 ThinQ', 'V40 ThinQ', 'G7 ThinQ', 'V35 ThinQ',
+        'V30 ThinQ', 'G6', 'V20', 'G5', 'V10',
+        'G4', 'G3', 'G2', 'V30', 'V20'
+    ],
+    Motorola: [
+        'Moto G Power', 'Moto G Stylus', 'Moto G Fast', 'Moto G8 Plus', 'Moto G7',
+        'Moto G7 Plus', 'Moto G7 Play', 'Moto G7 Power', 'Moto Z4', 'Moto Z3',
+        'Moto Z3 Play', 'Moto Z2 Force', 'Moto Z2 Play', 'Moto X4', 'Moto X Force'
+    ],
+    Nokia: [
+        'Nokia 8.3', 'Nokia 7.2', 'Nokia 6.2', 'Nokia 5.3', 'Nokia 3.4',
+        'Nokia 2.4', 'Nokia 1.3', 'Nokia 8.1', 'Nokia 7.1', 'Nokia 6.1',
+        'Nokia 5.1', 'Nokia 3.1', 'Nokia 2.1', 'Nokia 1', 'Nokia 9 PureView'
+    ]
+};
 
 async function zmpost(phone, pwd, umt) {
     try {
         const currentTime = Date.now();
+
+        // 读取或创建 deviceInfo.json 文件
+        let deviceInfoMap = {};
+        if (fs.existsSync(deviceInfoFilePath)) {
+            const fileContent = fs.readFileSync(deviceInfoFilePath, 'utf-8');
+            deviceInfoMap = JSON.parse(fileContent);
+        }
+
+        // 检查是否存在对应的 deviceInfo
+        let deviceInfo = deviceInfoMap[phone];
+        if (!deviceInfo) {
+            // 动态生成设备信息
+            const generateDeviceInfo = () => {
+                const deviceBrand = faker.random.arrayElement(Object.keys(deviceBrandsAndModels));
+                const deviceModel = faker.random.arrayElement(deviceBrandsAndModels[deviceBrand]);
+                return {
+                    apdId: `eYOIkkIlUMm5G4Rgahc/${faker.random.alphaNumeric(20)}`,
+                    deviceBrand: deviceBrand,
+                    deviceModel: deviceModel,
+                    t: currentTime,
+                    umidToken: umt
+                };
+            };
+
+            deviceInfo = generateDeviceInfo();
+            // 将新的 deviceInfo 保存到 deviceInfoMap 中
+            deviceInfoMap[phone] = deviceInfo;
+            // 将 deviceInfoMap 写入文件
+            fs.writeFileSync(deviceInfoFilePath, JSON.stringify(deviceInfoMap, null, 2), 'utf-8');
+        }
+
         const data = {
             ext: JSON.stringify({
                 alipayInstalled: "true",
                 apiVersion: "3.0",
-                deviceName: "23117RK66C",
+                deviceName: deviceInfo.deviceModel, // 使用 deviceModel 作为 deviceName
                 mobileCheckSimilarity: "true",
                 scene: "recommendLogin",
                 sdkTraceId: "pwdLogin_ZtkZY2aofs4DACn50tk0KFZq_1726757849_PageNewPassportLogin"
             }),
             loginInfo: JSON.stringify({
                 appName: "24895413",
-                appVersion: "android_11.15.38",
+                appVersion: "android_11.15.88",
                 locale: "zh_CN",
                 loginId: phone,
                 password: pwd,
                 pwdEncrypted: false,
-                sdkVersion: "android_11.15.38",
+                sdkVersion: "android_11.15.88",
                 site: 25,
                 t: currentTime,
-                ttid: "1601274962374@eleme_android_11.15.38"
+                ttid: "1601274962374@eleme_android_11.18.88"
             }),
-            riskControlInfo: JSON.stringify({
-                apdId: "eYOIkkIlUMm5G4Rgahc/bIq3Gy7POyKcyB92PfefQfy5OuhJHMVJTGLr",
-                deviceBrand: "Redmi",
-                deviceModel: "23117RK66C",
-                t: currentTime,
-                umidToken: umt
-            })
+            riskControlInfo: JSON.stringify(deviceInfo)
         };
-        
+
         const re = await resq("1", 'mtop.com.alsc.mloginservice.login', data);
-        
+
         if (re !== null) {
-            const msg = "账密版刷新成功";
+            const msg = `账密版刷新成功${deviceInfo.deviceBrand}${deviceInfo.deviceModel}: ${new Date().toLocaleString()}`;
+            console.log(`${msg}\n第 ${Object.keys(deviceInfoMap).length} 账号正常🎉🎉`);
             return { msg, result: re };
         } else {
             const msg = "账密版刷失败";
@@ -823,6 +913,53 @@ async function zmpost(phone, pwd, umt) {
         return { msg, result: null };
     }
 }
+// async function zmpost(phone, pwd, umt) {
+//     try {
+//         const currentTime = Date.now();
+//         const data = {
+//             ext: JSON.stringify({
+//                 alipayInstalled: "true",
+//                 apiVersion: "3.0",
+//                 deviceName: "23117RK66C",
+//                 mobileCheckSimilarity: "true",
+//                 scene: "recommendLogin",
+//                 sdkTraceId: "pwdLogin_ZtkZY2aofs4DACn50tk0KFZq_1726757849_PageNewPassportLogin"
+//             }),
+//             loginInfo: JSON.stringify({
+//                 appName: "24895413",
+//                 appVersion: "android_11.15.88",
+//                 locale: "zh_CN",
+//                 loginId: phone,
+//                 password: pwd,
+//                 pwdEncrypted: false,
+//                 sdkVersion: "android_11.15.88",
+//                 site: 25,
+//                 t: currentTime,
+//                 ttid: "1601274962374@eleme_android_11.18.88"
+//             }),
+//             riskControlInfo: JSON.stringify({
+//                 apdId: "eYOIkkIlUMm5G4Rgahc/bIq3Gy7POyKcyB92PfefQfy5OuhJHMVJTGLr",
+//                 deviceBrand: "Redmi",
+//                 deviceModel: "23117RK66C",
+//                 t: currentTime,
+//                 umidToken: umt
+//             })
+//         };
+
+//         const re = await resq("1", 'mtop.com.alsc.mloginservice.login', data);
+
+//         if (re !== null) {
+//             const msg = "账密版刷新成功";
+//             return { msg, result: re };
+//         } else {
+//             const msg = "账密版刷失败";
+//             return { msg, result: null };
+//         }
+//     } catch (error) {
+//         const msg = "账密版刷新失败";
+//         return { msg, result: null };
+//     }
+// }
 
 
 async function getCoordinates() {
