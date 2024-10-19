@@ -8,7 +8,7 @@
  *
  */
 
-const $ = new Env('饿了么db');
+const $ = new Env('饿了么夺宝');
 const axios = require('axios');
 const elmSignUrl =  process.env.urlsigun
 let cookiesArr = []
