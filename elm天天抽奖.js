@@ -255,7 +255,6 @@ async function fridensHelper(index,_0x100366, _0x33fd64, _0x5bef69, _0x28211e, _
     }
 
     let _0x31e014 = await getUserInfo(_0x3ba257);
-     console["log"](_0x31e014)
     if (!_0x31e014["userName"]) {
       console["log"]('第【', _0x3afecd + 1, "】账号失效！请重新登录！！！😭");
       continue;
