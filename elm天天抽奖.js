@@ -14,7 +14,7 @@ const {
   'getUserInfo': getUserInfo,
   'tryCatchPromise': tryCatchPromise,
   'checkMasterCk': checkMasterCk
-} = require("./common.js");
+} = require("./common2.js");
 
 const request = require("request"),
       https = require("https"),
@@ -111,7 +111,9 @@ function processUrl(_0xedab75) {
 }
 
 async function getShareId(_0x2572fb, _0x2e1e63, _0xd46322) {
+
   _0x2572fb = await checkMasterCk(_0x2572fb, kami, carmiType);
+
   !_0x2572fb && (console["log"]("需要助力的账号失效！请重新登录！！！"), process["exit"](0));
 
   var _0x39b939;
@@ -253,8 +255,8 @@ async function fridensHelper(index,_0x100366, _0x33fd64, _0x5bef69, _0x28211e, _
     }
 
     let _0x31e014 = await getUserInfo(_0x3ba257);
-
-    if (!_0x31e014["username"]) {
+     console["log"](_0x31e014)
+    if (!_0x31e014["userName"]) {
       console["log"]('第【', _0x3afecd + 1, "】账号失效！请重新登录！！！😭");
       continue;
     }
