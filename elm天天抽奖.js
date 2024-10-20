@@ -238,34 +238,70 @@ async function fridensHelper(index,_0x100366, _0x33fd64, _0x5bef69, _0x28211e, _
   } catch (_0xd3d10c) {}
 }
 
+// (async function () {
+//   const _0x319386 = process["env"]["ownCookie"];
+//   !_0x319386 && (console["log"]("未设置需助力的 ck，程序结束!"), process["exit"](0));
+//   CookieEles = getCookies();
+
+//   const _0x560964 = await getCoordinates(),
+//         _0x5d3e42 = await getShareId(_0x319386, _0x560964["longitude"], _0x560964["latitude"]);
+
+//   for (let _0x3afecd = 0; _0x3afecd < CookieEles["length"]; _0x3afecd++) {
+//     let _0x3ba257 = CookieEles[_0x3afecd];
+//     _0x3ba257 = await checkCk(_0x3ba257, _0x3afecd, kami, carmiType);
+
+//     if (!_0x3ba257) {
+//       continue;
+//     }
+
+//     let _0x31e014 = await getUserInfo(_0x3ba257);
+//     if (!_0x31e014["userName"]) {
+//       console["log"]('第【', _0x3afecd + 1, "】账号失效！请重新登录！！！😭");
+//       continue;
+//     }
+
+//     await fridensHelper(_0x3afecd+1,_0x3ba257, _0x319386, _0x5d3e42, _0x560964["longitude"], _0x560964["latitude"]);
+//   }
+
+//   process["exit"](0);
+// })();
 (async function () {
   const _0x319386 = process["env"]["ownCookie"];
+
   !_0x319386 && (console["log"]("未设置需助力的 ck，程序结束!"), process["exit"](0));
-  CookieEles = getCookies();
 
-  const _0x560964 = await getCoordinates(),
-        _0x5d3e42 = await getShareId(_0x319386, _0x560964["longitude"], _0x560964["latitude"]);
+  // 将 _0x319386 按 & 分割成数组
+  const cookies = _0x319386.includes('&') ? _0x319386.split('&') : [_0x319386];
 
-  for (let _0x3afecd = 0; _0x3afecd < CookieEles["length"]; _0x3afecd++) {
-    let _0x3ba257 = CookieEles[_0x3afecd];
-    _0x3ba257 = await checkCk(_0x3ba257, _0x3afecd, kami, carmiType);
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i];
+    console["log"]("处理第 " + (i + 1) + " 个 cookie: " );
 
-    if (!_0x3ba257) {
-      continue;
+    const _0x560964 = await getCoordinates();
+    const _0x5d3e42 = await getShareId(cookie, _0x560964["longitude"], _0x560964["latitude"]);
+
+    CookieEles = getCookies();
+
+    for (let _0x3afecd = 0; _0x3afecd < CookieEles["length"]; _0x3afecd++) {
+      let _0x3ba257 = CookieEles[_0x3afecd];
+      _0x3ba257 = await checkCk(_0x3ba257, _0x3afecd, kami, carmiType);
+
+      if (!_0x3ba257) {
+        continue;
+      }
+
+      let _0x31e014 = await getUserInfo(_0x3ba257);
+      if (!_0x31e014["userName"]) {
+        console["log"]('第【', _0x3afecd + 1, "】账号失效！请重新登录！！！😭");
+        continue;
+      }
+
+      await fridensHelper(_0x3afecd + 1, _0x3ba257, cookie, _0x5d3e42, _0x560964["longitude"], _0x560964["latitude"]);
     }
-
-    let _0x31e014 = await getUserInfo(_0x3ba257);
-    if (!_0x31e014["userName"]) {
-      console["log"]('第【', _0x3afecd + 1, "】账号失效！请重新登录！！！😭");
-      continue;
-    }
-
-    await fridensHelper(_0x3afecd+1,_0x3ba257, _0x319386, _0x5d3e42, _0x560964["longitude"], _0x560964["latitude"]);
   }
 
   process["exit"](0);
 })();
-
 function getRandom(_0x483f0c, _0x4c71e1) {
   return Math["floor"](Math["random"]() * (_0x4c71e1 - _0x483f0c + 1) + _0x483f0c);
 }
