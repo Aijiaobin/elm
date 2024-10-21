@@ -275,6 +275,7 @@ async function fridensHelper(index,_0x100366, _0x33fd64, _0x5bef69, _0x28211e, _
 
   for (let i = 0; i < 4; i++) {
     const cookie = cookies[i];
+
     console["log"]("处理第 " + (i + 1) + " 个 cookie: " );
 
     const _0x560964 = await getCoordinates();
