@@ -36,14 +36,20 @@ function reorderCookie(s) {
     const cookieDict = {};
 
     cookies.forEach(cookie => {
-        const keyValue = cookie.split('=', 2);
-        if (keyValue.length === 2) {
-            const key = keyValue[0].trim();
-            const value = keyValue[1].trim();
+        // 找到第一个 '=' 的位置
+        const index = cookie.indexOf('=');
+        if (index > -1) {
+            const key = cookie.slice(0, index).trim();  // 取出 '=' 之前的部分作为 key
+            const value = cookie.slice(index + 1).trim();  // 取出 '=' 之后的所有内容作为 value
             cookieDict[key] = value;
         }
+        // const keyValue = cookie.split('=',2);
+        // if (keyValue.length === 2) {
+        //     const key = keyValue[0].trim();
+        //     const value = keyValue[1].trim();
+        //     cookieDict[key] = value;
+        // }
     });
-
     const reorderedCookies = [];
 
     order.forEach(key => {
@@ -67,17 +73,22 @@ function _0x389941(_0x1daaab) {
 
 async function _0x179175(data, context, options) {
     let result1 = await runOne(context, options);
+    // console.log(result1)
     const msg = result1.msg;
     const responseData = result1.result;
 
     if (responseData) {
         if (responseData.code === 3000) {
             let parsedData = JSON.parse(responseData.returnValue.data);
+            let sid_now = parsedData.loginServiceExt;
+            let sid_eleExt = JSON.parse( sid_now.eleExt);
+            let sid_value = sid_eleExt.find((o)=>o.name === 'SID').value
             let token = parsedData.autoLoginToken;
             let cookie2 = responseData.returnValue.sid;
             let unb = responseData.returnValue.hid;
             const expiryTimestamp = parsedData.expires;
             const expiryDate = _0x11f78e(expiryTimestamp * 1000).format("YYYY-MM-DD HH:mm:ss");
+            console.log(sid_eleExt.find((o)=>o.name === 'SID').value);
 
             let cookieMap = getCookieMap(context);
             let updatedContext = await runOne(context, cookieMap.get("SID"));
@@ -89,6 +100,7 @@ async function _0x179175(data, context, options) {
             cookieMap.set('cookie2', cookie2);
             cookieMap.set('token', token);
             cookieMap.set('unb', unb);
+            cookieMap.set('SID',sid_value);
 
             let ck666 = _0x389941(cookieMap);
             let updatedEnvironment = reorderCookie(ck666);
@@ -178,7 +190,7 @@ async function _0x179175(data, context, options) {
                 console.log(hannelore);
             }
         }
-      await wait(_0x543ec4(1, 3));
+        await wait(_0x543ec4(1, 3));
     }
     process.exit(0);
 }());
