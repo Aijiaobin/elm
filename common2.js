@@ -27,9 +27,9 @@ async function _0xe1593e(_0x455896, _0x22c427) {
 
     if (!_0x5e5fcc.has("wxUid")) {
         // console.log("没有获取到推送 uid，不推送消息\n");
-        await _0x255ab6("饿了么通知", _0x22c427);
+        await _0x255ab6(_0x455896, _0x22c427);
     } else {
-        await _0x255ab6("饿了么通知", _0x22c427, {
+        await _0x255ab6(_0x455896, _0x22c427, {
             uid: _0x5e5fcc.get("wxUid")
         });
     }
@@ -649,7 +649,7 @@ function _0x5a5a78(_0x4ba8e2) {
 }
 
 async function _0x319dd8(_0x3cb055, _0x59d48e) {
-        // 调用 pushPlusNotify 函数发送通知
+    // 调用 pushPlusNotify 函数发送通知
     // await sendNotify.pushPlusNotify(_0x3cb055, _0x59d48e);
 }
 
