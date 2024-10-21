@@ -27,9 +27,9 @@ async function _0xe1593e(_0x455896, _0x22c427) {
 
     if (!_0x5e5fcc.has("wxUid")) {
         // console.log("没有获取到推送 uid，不推送消息\n");
-        await _0x255ab6("饿了么抢券成功推送", _0x22c427);
+        await _0x255ab6("饿了么通知", _0x22c427);
     } else {
-        await _0x255ab6("饿了么抢券成功推送", _0x22c427, {
+        await _0x255ab6("饿了么通知", _0x22c427, {
             uid: _0x5e5fcc.get("wxUid")
         });
     }

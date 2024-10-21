@@ -108,7 +108,7 @@ class LYB:
 
     def yqm(self):
         if 'ZL_CK' in os.environ:
-            cki = self.tq(os.environ.get('ZL_CK'))
+            cki = self.tq(os.environ.get('elmzlck'))
         else:
             cki = self.tq(self.ck)
 
@@ -271,6 +271,69 @@ def get_ck_usid(ck):
     return None
 
 
+# if __name__ == '__main__':
+#     today = datetime.date.today()
+#     today_str = today.strftime('%Y%m%d')
+#     filename = f'{today_str}.json'
+
+#     if not os.path.exists(filename):
+#         with open(filename, 'w') as f:
+#             json.dump({}, f)
+#         print("今日助力json文件不存在，已创建")
+#     else:
+#         print("今日助力json文件已存在")
+
+#     with open(filename, 'r') as file:
+#         data = json.load(file)
+
+#     ck = os.environ.get('elmck')
+#     ck_list = ck.split("&") if ck else []
+#     random.shuffle(ck_list)
+#     print(f"获取到 {len(ck_list)} 个随机打乱顺序的助力账号")
+
+#     zlck = os.environ.get('elmzlck')
+#     zlck_list = zlck.split("&") if zlck else []
+#     print(f"获取到 {len(zlck_list)} 个被助力账号")
+
+#     for dzl_num, zlck in enumerate(zlck_list, start=1):
+#         lyb = LYB(zlck)
+#         actid, shareId = lyb.yqm()
+#         if actid is None or shareId is None:
+#             print("❎获取助力id失败\n")
+#             continue
+#         print(f"🐂🍺>>>开始给第{dzl_num}/{len(ck_list)}个账号助力->获取邀请码成功->>")
+
+#         for i, ck in enumerate(ck_list):
+#             if len(ck) > 200:
+#                 usid = get_ck_usid(ck)
+#                 zlcs = data.get(f"{usid}", 0)
+#                 if zlcs < 3:
+#                     print(f">>>第{i + 1}个", end="")
+#                     try:
+#                         a = LYB(ck).share(actid, shareId, usid)
+#                         if a is None:
+#                             continue
+#                         elif a == 'SX':
+
+#                             break
+#                         else:
+#                             data[f"{usid}"] = zlcs + 1
+#                             with open(filename, 'w') as file:
+#                                 json.dump(data, file, indent=4)
+
+#                     except Exception as e:
+#                         print(f"❎助力时发生错误: {e}")
+#                         continue
+#             else:
+#                 print("网页CK，暂时跳过\n")
+#         print("\n======助力结束,领取奖励======")
+
+#         try:
+#             lyb.prize()
+#         except Exception as e:
+#             print(f"❎领取奖励时发生错误: {e}")
+#         print(f"======被助力账号{dzl_num}-助力结束======\n")
+
 if __name__ == '__main__':
     today = datetime.date.today()
     today_str = today.strftime('%Y%m%d')
@@ -291,17 +354,21 @@ if __name__ == '__main__':
     random.shuffle(ck_list)
     print(f"获取到 {len(ck_list)} 个随机打乱顺序的助力账号")
 
-    zlck = os.environ.get('elmzlck')
+    # 修改部分：将 zlck 改为从 elmck 获取
+    zlck = os.environ.get('elmck')
     zlck_list = zlck.split("&") if zlck else []
     print(f"获取到 {len(zlck_list)} 个被助力账号")
 
-    for dzl_num, zlck in enumerate(zlck_list, start=1):
+    # 限制循环次数，最多循环四次
+    max_loops = min(4, len(zlck_list))
+
+    for dzl_num, zlck in enumerate(zlck_list[:max_loops], start=1):
         lyb = LYB(zlck)
         actid, shareId = lyb.yqm()
         if actid is None or shareId is None:
             print("❎获取助力id失败\n")
             continue
-        print(f"🐂🍺>>>开始给第{dzl_num}/{len(ck_list)}个账号助力->获取邀请码成功->>")
+        print(f"🐂🍺>>>开始给第{dzl_num}/{max_loops}个账号助力->获取邀请码成功->>")
 
         for i, ck in enumerate(ck_list):
             if len(ck) > 200:
@@ -314,7 +381,6 @@ if __name__ == '__main__':
                         if a is None:
                             continue
                         elif a == 'SX':
-
                             break
                         else:
                             data[f"{usid}"] = zlcs + 1
@@ -333,4 +399,3 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"❎领取奖励时发生错误: {e}")
         print(f"======被助力账号{dzl_num}-助力结束======\n")
-
