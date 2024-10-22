@@ -1,4 +1,4 @@
-# cron: 10 3 * * *
+# cron: 10 0,11,17,21 * * *
 # new Env('饿了么助力浇水');
 # urlsigun 变量
 import json

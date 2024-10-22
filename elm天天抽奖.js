@@ -266,7 +266,7 @@ async function fridensHelper(index,_0x100366, _0x33fd64, _0x5bef69, _0x28211e, _
 //   process["exit"](0);
 // })();
 (async function () {
-  const _0x319386 = process["env"]["elmck"];
+  const _0x319386 = process["env"]["ownCookie"];
 
   !_0x319386 && (console["log"]("未设置需助力的 ck，程序结束!"), process["exit"](0));
 
