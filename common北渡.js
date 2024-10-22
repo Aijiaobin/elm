@@ -457,6 +457,7 @@ async function resq(ck1, api, data) {
         if (jsonData.ret[0] === 'SUCCESS::调用成功' || jsonData.ret[0] === 'SUCCESS::成功' || 'code' in jsonData['data'] && jsonData['data']['code'] === 3000) {
             return jsonData.data;
         } else {
+            console.log(jsonData.data.message);
             return null;
         }
     } catch (error) {

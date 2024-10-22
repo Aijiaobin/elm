@@ -70,10 +70,32 @@ function _0x389941(_0x1daaab) {
 
     return _0x59299c;
 }
+function _0x34bc10(_0x11bd1a) {
+    var _0x36192b = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_",
+        _0x2bf93d = "";
+
+    for (var _0x4fef5b = _0x11bd1a; _0x4fef5b > 0; --_0x4fef5b) {
+        _0x2bf93d += _0x36192b[Math.floor(Math.random() * _0x36192b.length)];
+    }
+
+    return _0x2bf93d;
+}
+
+async function addUmtIfMissing(context) {
+    let msg ="umt="+_0x34bc10(36)+";";
+    // 检查是否已经存在 'umt='
+    if (!context.includes('umt=')) {
+        return msg + context;
+    }
+    return context;
+}
 
 async function _0x179175(data, context, options) {
+    //判断是否有umt
+    context = await addUmtIfMissing(context);
+
     let result1 = await runOne(context, options);
-    // console.log(result1)
+    console.log(context,options)
     const msg = result1.msg;
     const responseData = result1.result;
 
@@ -83,24 +105,30 @@ async function _0x179175(data, context, options) {
             let sid_now = parsedData.loginServiceExt;
             let sid_eleExt = JSON.parse( sid_now.eleExt);
             let sid_value = sid_eleExt.find((o)=>o.name === 'SID').value
+            let userId_value = sid_eleExt.find((o)=>o.name === 'USERID').value
             let token = parsedData.autoLoginToken;
             let cookie2 = responseData.returnValue.sid;
+            let cookies = JSON.parse(responseData.returnValue.data).cookies;
+            let sgcookie = cookies[4].split(';')[0].split('=')[1];
+
             let unb = responseData.returnValue.hid;
             const expiryTimestamp = parsedData.expires;
             const expiryDate = _0x11f78e(expiryTimestamp * 1000).format("YYYY-MM-DD HH:mm:ss");
-            console.log(sid_eleExt.find((o)=>o.name === 'SID').value);
 
             let cookieMap = getCookieMap(context);
-            let updatedContext = await runOne(context, cookieMap.get("SID"));
+            // let updatedContext = await runOne(context, cookieMap.get("SID"));
 
-            if (!updatedContext) {
-                return;
-            }
+            // if (!updatedContext) {
+            //     return;
+            // }
 
             cookieMap.set('cookie2', cookie2);
             cookieMap.set('token', token);
             cookieMap.set('unb', unb);
             cookieMap.set('SID',sid_value);
+            cookieMap.set("USERID",userId_value);
+            cookieMap.set("sgcookie",sgcookie);
+            // cookieMap.set("umt",);
 
             let ck666 = _0x389941(cookieMap);
             let updatedEnvironment = reorderCookie(ck666);
