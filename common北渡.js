@@ -458,6 +458,7 @@ async function resq(ck1, api, data) {
             return jsonData.data;
         } else {
             console.log(jsonData.data.message);
+
             return null;
         }
     } catch (error) {
