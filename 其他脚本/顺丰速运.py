@@ -2,7 +2,7 @@
 # -- coding: utf-8 --
 # -------------------------------
 # @Author : cherwin
-# cron "5 5,17 * * *" script-path=xxx.py,tag=匹配cron用
+# cron "0 20 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('顺丰速运')
 import hashlib
 import json

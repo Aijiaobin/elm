@@ -3,7 +3,7 @@
 -- coding: utf-8 --
 -------------------------------
 ✨✨✨ @Author CHERWIN✨✨✨
-cron "51 8,21 * * *" script-path=xxx.py,tag=匹配cron用
+cron "5 20 * * *" script-path=xxx.py,tag=匹配cron用
 const $ = new Env('永辉生活')
 '''
 import hashlib
