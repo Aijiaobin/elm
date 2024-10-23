@@ -4,6 +4,7 @@
 # cron "0 20 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('鸿星尔克官方会员中心小程序')
 
+
 import os
 import random
 import time
