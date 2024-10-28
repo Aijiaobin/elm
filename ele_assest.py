@@ -342,7 +342,7 @@ if __name__ == '__main__':
     # 删除之前产生的json文件，但保留今日文件和deviceinfo.json
     json_files = glob.glob('*.json')  # 获取当前目录下所有json文件
     for file in json_files:
-        if file != filename and file != 'deviceInfo.json':
+        if file != filename and file != 'deviceInfo.json' and 'nc' not in file:
             os.remove(file)  # 删除不是今日的文件并排除deviceInfo.json
             print(f"删除旧文件: {file}")
 
