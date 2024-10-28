@@ -10,8 +10,10 @@
 
 const $ = new Env('饿了么夺宝');
 const axios = require('axios');
+const {couponNotify} = require("./common2.js");
 const elmSignUrl =  process.env.urlsigun
 let cookiesArr = []
+
 
 if (process.env.elmck) {
     if (process.env.elmck.indexOf('&') > -1) {
@@ -24,8 +26,6 @@ if (process.env.elmck) {
 
 !(async () => {
 
-
-    //console.log()
     if (!cookiesArr[0]) {
         $.msg("未获取到elmck变量")
         return;
@@ -35,30 +35,32 @@ if (process.env.elmck) {
     for (let i = 0; i < cookiesArr.length; i++) {
         try {
             var userCookieMap = cookiesToMap(cookiesArr[i]);
-            if (!userCookieMap || !userCookieMap.get("USERID")) {
+            if (!userCookieMap || !userCookieMap.get("phone")) {
                 $.log(`第${i + 1}账号Cookie出现异常,跳过任务`);
                 continue;
             }
-            $.log("******开始【账号" + (i + 1) + "】" + userCookieMap.get("USERID") + "*********");
+            $.log("******开始【账号" + (i + 1) + "】" + userCookieMap.get("phone") + "*********");
             let taskList = await getDBHomepage(cookiesArr[i]);
             if (taskList && taskList.length > 0) {
-                console.log(`🎉夺宝信息获取成功,开始无脑领取任务${taskList.length}个夺宝奖励`)
+                $.log(`🎉夺宝信息获取成功,开始无脑领取任务${taskList.length}个夺宝奖励`)
                 for (const taskTemp of taskList) {
-                    console.log(`👉开始无脑领取${taskTemp.name}`)
+                    $.log(`👉开始无脑领取${taskTemp.name}`)
+
                     if (!taskTemp.hasParticipated) {
-                        await getDBAward(cookiesArr[i], taskTemp.taskSetId, taskTemp.popTaskId);
-                        $.log(`等待5秒`);
+                        await getDBAward(cookiesArr[i], taskTemp.taskSetId, taskTemp.popTaskId,taskTemp.name,userCookieMap.get("phone"));
+                        $.log(`等待   5秒`);
                         await $.wait(5000);
                     } else {
-                        console.log(`🔴${taskTemp.name}已参与领取,跳过`)
+                        $.log(`🔴${taskTemp.name}已参与领取,跳过`)
                     }
                 }
             }
         } catch (e) {
-            console.log("运行异常,继续下一个:" + e.toString())
+            $.log("运行异常,继续下一个:" + e.toString())
         }
-
+        $.log("-----")
     }
+    await couponNotify("饿了么夺宝成功", $.sendLogs.join($.logSeparator), {});
 })();
 
 
@@ -66,8 +68,6 @@ async function getApiElmSign(api, data, uid, sid) {
     let dataAxios = {
         "data": data, "api": api, "pageId": '', "uid": uid, 'sid': sid, "deviceId": '', "utdid": '',
     }
-    //  console.log(JSON.stringify(dataAxios))
-
     const response = await axios.post(
         elmSignUrl,
         dataAxios,
@@ -78,7 +78,6 @@ async function getApiElmSign(api, data, uid, sid) {
 
 
     if (response && response.data) {
-        //   console.log(response.data)
         return response.data
     }
     console.log('ele-sign接口异常')
@@ -91,16 +90,16 @@ async function elmRequestByApi(cookie, api, data) {
     var cookieMap = cookiesToMap(cookie);
     let uid = cookieMap.get("unb")
     let sid = cookieMap.get("cookie2")
-    let uin = cookieMap.get("USERID")
+    let uin = cookieMap.get("phone")
 
     if (!uid || !sid) {
-        console.log(`${uin}饿了么Cookie unb或sid为空`);
+        $.log(`${uin}饿了么Cookie unb或sid为空`);
         return;
     }
     let elmSignInfo = await getApiElmSign(api, data, uid, sid);
 
     if (!elmSignInfo || !elmSignInfo['x-sign']) {
-        console.log(`${uin}饿了么sign请求失败${api}`);
+        $.log(`${uin}饿了么sign请求失败${api}`);
         return;
     }
 
@@ -156,11 +155,11 @@ async function getDBHomepage(cookie) {
     let reposePage = await elmRequestByApi(cookie, api, data);
     /// console.log(JSON.stringify(reposePage))
     if (!reposePage) {
-        console.log("❌夺宝信息获取失败")
+        $.log("❌夺宝信息获取失败")
         return;
     }
     if (JSON.stringify(reposePage.ret).indexOf("SUCCESS") < 0) {
-        console.log(`❌夺宝信息获取失败,${JSON.stringify(resultStr.ret)}`)
+        $.log(`❌夺宝信息获取失败,${JSON.stringify(resultStr.ret)}`)
         return;
     }
     let treasureHuntList = reposePage?.data?.data?.groupSnatchList?.EXCELLENT;
@@ -182,22 +181,22 @@ async function getDBHomepage(cookie) {
 }
 
 
-async function getDBAward(cookie, missionCollectionId, missionId) {
+async function getDBAward(cookie, missionCollectionId, missionId,taskName,phone) {
 
     let api = "mtop.ele.biz.growth.task.core.receiveprize";
     let data = '{"accountPlan":"HAVANA_COMMON","bizScene":"duobao_external","count":"1","hsf":"1","locationInfos":"[\\"{\\\\\\"lng\\\\\\":113.54791592806578,\\\\\\"lat\\\\\\":34.803482852876186}\\"]","missionCollectionId":"' + missionCollectionId + '","missionId":"' + missionId + '"}';
     let reposePage = await elmRequestByApi(cookie, api, data);
-    /// console.log(JSON.stringify(reposePage))
+
     if (!reposePage) {
-        console.log("❌夺宝奖励领取失败")
+        $.log("❌夺宝奖励领取失败")
         return;
     }
     if (JSON.stringify(reposePage.ret).indexOf("SUCCESS") < 0) {
-        console.log(`❌夺宝奖励领取失败:${JSON.stringify(reposePage.ret)}`)
+        $.log(`❌夺宝奖励领取失败:${JSON.stringify(reposePage.ret)}`)
         return;
     }
     //console.log(JSON.stringify(reposePage))
-    console.log("✅夺宝奖励领取成功")
+    $.sendLog("✅【"+phone+"】---"+taskName+" || 夺宝奖励领取成功")
     return null;
 }
 
@@ -228,7 +227,7 @@ function Env(t, e) {
 
     return new class {
         constructor(t, e) {
-            this.name = t, this.http = new s(this), this.data = null, this.dataFile = "box.dat", this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`)
+            this.name = t, this.http = new s(this), this.data = null, this.dataFile = "box.dat", this.logs = [],this.sendLogs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`)
         }
 
         isNode() {
@@ -470,6 +469,9 @@ function Env(t, e) {
 
         log(...t) {
             t.length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator))
+        }
+        sendLog(...t) {
+            t.length > 0 && (this.sendLogs = [...this.sendLogs, ...t]), console.log(t.join(this.logSeparator))
         }
 
         logErr(t, e) {
