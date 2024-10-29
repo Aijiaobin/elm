@@ -15,7 +15,7 @@ const {
     getUserInfo,
     checkCarmeCount,
     wait
-} = require("./common2");
+} = require("./common北渡");
 
 const _0x38436e = 12;
 

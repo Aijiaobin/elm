@@ -16,7 +16,7 @@ const {
   getUserInfo,
   tryCatchPromise,
   couponNotify
-} = require("./common2.js");
+} = require("./common北渡.js");
 
 const request = require("request");
 const { pushPlusNotify } = require('./sendNotify.js');

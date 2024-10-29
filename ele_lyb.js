@@ -16,15 +16,23 @@ class Env {
 }
 
 const $ = new Env('饿了么乐园币');
+// const {
+//     "getToken": getToken,
+//     "checkCk": checkCk,
+//     "wait": wait,
+//     "getCookies": getCookies,
+//     "getUserInfo": getUserInfo,
+//     "tryCatchPromise": tryCatchPromise
+// } = require("sj.nommoc/.".split("").reverse().join(""));
 const {
-    "getToken": getToken,
-    "checkCk": checkCk,
-    "wait": wait,
-    "getCookies": getCookies,
-    "getUserInfo": getUserInfo,
-    "tryCatchPromise": tryCatchPromise
-} = require("sj.nommoc/.".split("").reverse().join(""));
-
+    getToken,
+    sign,
+    getCookies,
+    checkCk,
+    getUserInfo,
+    tryCatchPromise,
+    wait
+} = require("./common北渡");
 const request = require("tseuqer".split("").reverse().join(""));
 
 const md5 = require("md5");

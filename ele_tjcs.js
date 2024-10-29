@@ -16,7 +16,7 @@ const {
     "checkCk": checkCk,
     getUserInfo,
     wait,
-} = require("./common2.js");
+} = require("./common北渡.js");
 
 function updateCookie(tkCookie, encCookie, cookieStr) {
     // 合并带_m_h5_tk

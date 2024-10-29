@@ -15,7 +15,7 @@ const {
   getUserInfo,
   wait,
   checkCarmeCount
-} = require("./common2.js");
+} = require("./common北渡.js");
 
 const request = require("request");
 

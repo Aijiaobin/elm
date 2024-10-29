@@ -16,7 +16,7 @@ const {
   getUserInfo,
   checkCarmeCount,
   wait
-} = require("./common2");
+} = require("./common北渡");
 
 const GAME_TYEP = 13;
 

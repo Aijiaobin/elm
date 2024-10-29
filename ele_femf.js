@@ -18,7 +18,7 @@ const {
     getToken,
     checkCk,
     tryCatchPromise
-  } = require("./common.js"),
+  } = require("./common北渡.js"),
   request = require("request"),
   _0x57253e = process.env.ELE_CARME,
   _0x1c5d9a = 16;

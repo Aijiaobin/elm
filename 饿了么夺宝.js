@@ -10,7 +10,7 @@
 
 const $ = new Env('饿了么夺宝');
 const axios = require('axios');
-const {couponNotify} = require("./common2.js");
+const {couponNotify} = require("./common北渡.js");
 const elmSignUrl =  process.env.urlsigun
 let cookiesArr = []
 
