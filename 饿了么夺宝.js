@@ -60,7 +60,9 @@ if (process.env.elmck) {
         }
         $.log("-----")
     }
-    await couponNotify("饿了么夺宝成功", $.sendLogs.join($.logSeparator), {});
+    if ($.sendLogs.join($.logSeparator) != null && $.sendLogs.join($.logSeparator).length>0){
+        await couponNotify("饿了么夺宝成功", $.sendLogs.join($.logSeparator), {});
+    }
 })();
 
 
