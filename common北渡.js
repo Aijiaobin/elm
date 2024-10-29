@@ -74,6 +74,38 @@ const _0x8e4076 = _0x3e4823 => {
     });
 };
 
+// function _0x29be58(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b = 5) {
+//     const _0x3afb08 = {
+//         url: "https://waimai-guide.ele.me/h5/mtop.alsc.personal.queryminecenter/1.0/?jsv=2.6.2&appKey=12574478",
+//         headers: {
+//             Cookie: _0x4b02a4,
+//             method: "GET",
+//             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36"
+//         }
+//     };
+//     return _0x13509e(_0x3684a8 => {
+//         try {
+//             request(_0x3afb08, async (_0x29756a, _0x1cbcc1, _0x3e2bff) => {
+//                 if (!_0x29756a && _0x1cbcc1.statusCode === 200) {
+//                     const _0x579b39 = JSON.stringify(_0x1cbcc1.headers["set-cookie"]),
+//                         _0x1f267a = /_m_h5_tk=(\S*);/,
+//                         _0x2339af = _0x579b39.match(_0x1f267a)[1],
+//                         _0x18600c = " _m_h5_tk=" + _0x2339af.split(";")[0],
+//                         _0x4be746 = /_m_h5_tk_enc=(\S*);/,
+//                         _0xa418c6 = _0x579b39.match(_0x4be746)[1],
+//                         _0x16b90b = " _m_h5_tk_enc=" + _0xa418c6.split(";")[0];
+
+//                     _0x4b02a4 = _0x3359bc(_0x18600c, _0x16b90b, _0x4b02a4);
+//                     _0x44b02b <= 0 ? (console.log("第", _0x2bf34a + 1, "cookie存在异常，请检查"), _0x3684a8(null)) : _0x3684a8(await _0x1d6167(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b - 1));
+//                 } else {
+//                     _0x3684a8(null);
+//                 }
+//             });
+//         } catch (_0x23f631) {
+//             console.log(_0x5c8af1);
+//         }
+//     });
+// }
 function _0x29be58(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b = 5) {
     const _0x3afb08 = {
         url: "https://waimai-guide.ele.me/h5/mtop.alsc.personal.queryminecenter/1.0/?jsv=2.6.2&appKey=12574478",
@@ -83,20 +115,27 @@ function _0x29be58(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b = 5) {
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36"
         }
     };
-    return _0x13509e(_0x3684a8 => {
+    return _0x13509e(function(_0x3684a8) {
         try {
-            request(_0x3afb08, async (_0x29756a, _0x1cbcc1, _0x3e2bff) => {
+            request(_0x3afb08, async function(_0x29756a, _0x1cbcc1, _0x3e2bff) {
                 if (!_0x29756a && _0x1cbcc1.statusCode === 200) {
                     const _0x579b39 = JSON.stringify(_0x1cbcc1.headers["set-cookie"]),
                         _0x1f267a = /_m_h5_tk=(\S*);/,
-                        _0x2339af = _0x579b39.match(_0x1f267a)[1],
-                        _0x18600c = " _m_h5_tk=" + _0x2339af.split(";")[0],
-                        _0x4be746 = /_m_h5_tk_enc=(\S*);/,
-                        _0xa418c6 = _0x579b39.match(_0x4be746)[1],
-                        _0x16b90b = " _m_h5_tk_enc=" + _0xa418c6.split(";")[0];
+                        matchResult = _0x579b39.match(_0x1f267a);
 
-                    _0x4b02a4 = _0x3359bc(_0x18600c, _0x16b90b, _0x4b02a4);
-                    _0x44b02b <= 0 ? (console.log("第", _0x2bf34a + 1, "cookie存在异常，请检查"), _0x3684a8(null)) : _0x3684a8(await _0x1d6167(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b - 1));
+                    if (matchResult && matchResult.length > 1) {
+                        _0x2339af = matchResult[1];
+                        const _0x18600c = " _m_h5_tk=" + _0x2339af.split(";")[0],
+                            _0x4be746 = /_m_h5_tk_enc=(\S*);/,
+                            _0xa418c6 = _0x579b39.match(_0x4be746)[1],
+                            _0x16b90b = " _m_h5_tk_enc=" + _0xa418c6.split(";")[0];
+
+                        _0x4b02a4 = _0x3359bc(_0x18600c, _0x16b90b, _0x4b02a4);
+                        _0x44b02b <= 0 ? (console.log("第", _0x2bf34a + 1, "cookie存在异常，请检查"), _0x3684a8(null)) : _0x3684a8(await _0x1d6167(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b - 1));
+                    } else {
+                        console.error("匹配失败，无法获取 _m_h5_tk 值");
+                        _0x3684a8(null);
+                    }
                 } else {
                     _0x3684a8(null);
                 }
@@ -106,7 +145,6 @@ function _0x29be58(_0x4b02a4, _0x2bf34a, _0x494579, _0x34c060, _0x44b02b = 5) {
         }
     });
 }
-
 function _0x3d6510() {
     var _0x14ea68 = function (_0x368c59) {
             this.s = _0x368c59;
