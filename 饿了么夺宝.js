@@ -188,7 +188,7 @@ async function getDBAward(cookie, missionCollectionId, missionId,taskName,phone)
     let api = "mtop.ele.biz.growth.task.core.receiveprize";
     let data = '{"accountPlan":"HAVANA_COMMON","bizScene":"duobao_external","count":"1","hsf":"1","locationInfos":"[\\"{\\\\\\"lng\\\\\\":113.54791592806578,\\\\\\"lat\\\\\\":34.803482852876186}\\"]","missionCollectionId":"' + missionCollectionId + '","missionId":"' + missionId + '"}';
     let reposePage = await elmRequestByApi(cookie, api, data);
-
+    console.log("接口返回结果："+reposePage)
     if (!reposePage) {
         $.log("❌夺宝奖励领取失败")
         return;
