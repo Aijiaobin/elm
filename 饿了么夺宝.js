@@ -128,6 +128,9 @@ async function elmRequestByApi(cookie, api, data) {
     } : {"data": data};
 
     const response = await axios.post(url, params, {headers});
+    if(response.data.api !=='mtop.koubei.interactioncenter.snatch.homepage.query'){
+        $.log(`接口返回结果：${JSON.stringify(response.data, null, 2)}`)
+    }
     if (response && response.data && response.data.data) {
         return response.data
     }
