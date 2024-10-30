@@ -236,7 +236,7 @@ const {
   tryCatchPromise,
   getCookieMap,
   couponNotify
-} = require("./common2.js");
+} = require("./common北渡.js");
 
 const _0x3ee842 = require("moment");
 
