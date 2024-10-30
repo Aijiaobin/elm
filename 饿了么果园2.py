@@ -15,6 +15,7 @@ urlsigun = os.environ.get('urlsigun')
 ck = ''
 
 
+
 class LYB:
     def __init__(self, cki):
         self.name = None
