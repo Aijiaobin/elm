@@ -9,8 +9,9 @@
  */
 
 const $ = new Env('饿了么夺宝');
+
 const axios = require('axios');
-const {couponNotify} = require("./common北渡.js");
+const {couponNotify,getUserInfo,checkCk} = require("./common北渡.js");
 const elmSignUrl =  process.env.urlsigun
 let cookiesArr = []
 
@@ -35,19 +36,22 @@ if (process.env.elmck) {
     for (let i = 0; i < cookiesArr.length; i++) {
         try {
             var userCookieMap = cookiesToMap(cookiesArr[i]);
+            let athel = await checkCk(cookiesArr[i], i);
+            const userInfo =await getUserInfo(athel);
+
             if (!userCookieMap || !userCookieMap.get("phone")) {
                 $.log(`第${i + 1}账号Cookie出现异常,跳过任务`);
                 continue;
             }
-            $.log("******开始【账号" + (i + 1) + "】" + userCookieMap.get("phone") + "*********");
-            let taskList = await getDBHomepage(cookiesArr[i]);
+            $.log("******开始【账号" + (i + 1) + "】" + userInfo.encryptMobile+ "*********");
+            let taskList = await getDBHomepage(cookiesArr[i],userInfo.encryptMobile);
             if (taskList && taskList.length > 0) {
                 $.log(`🎉夺宝信息获取成功,开始无脑领取任务${taskList.length}个夺宝奖励`)
                 for (const taskTemp of taskList) {
                     $.log(`👉开始无脑领取${taskTemp.name}`)
 
                     if (!taskTemp.hasParticipated) {
-                        await getDBAward(cookiesArr[i], taskTemp.taskSetId, taskTemp.popTaskId,taskTemp.name,userCookieMap.get("phone"));
+                        await getDBAward(cookiesArr[i], taskTemp.taskSetId, taskTemp.popTaskId,taskTemp.name,userInfo.encryptMobile);
                         $.log(`等待   5秒`);
                         await $.wait(5000);
                     } else {
@@ -87,21 +91,20 @@ async function getApiElmSign(api, data, uid, sid) {
 }
 
 
-async function elmRequestByApi(cookie, api, data) {
+async function elmRequestByApi(cookie, api, data,encryptMobile) {
 
     var cookieMap = cookiesToMap(cookie);
     let uid = cookieMap.get("unb")
     let sid = cookieMap.get("cookie2")
-    let uin = cookieMap.get("phone")
 
     if (!uid || !sid) {
-        $.log(`${uin}饿了么Cookie unb或sid为空`);
+        $.log(`${encryptMobile}饿了么Cookie unb或sid为空`);
         return;
     }
     let elmSignInfo = await getApiElmSign(api, data, uid, sid);
 
     if (!elmSignInfo || !elmSignInfo['x-sign']) {
-        $.log(`${uin}饿了么sign请求失败${api}`);
+        $.log(`${encryptMobile}饿了么sign请求失败${api}`);
         return;
     }
 
@@ -153,11 +156,11 @@ function cookiesToMap(cookies) {
 }
 
 
-async function getDBHomepage(cookie) {
+async function getDBHomepage(cookie,encryptMobile) {
 
     let api = "mtop.koubei.interactioncenter.snatch.homepage.query";
     let data = '{"actId":"20230811111144939171438583","bizScene":"duobao_external","bizSource":"APP","blockList":"[\\"participants\\",\\"wonDetail\\",\\"noWonPrize\\"]","channel":"ELMC","cpnCode":"TIMING_RIGHT","cpnCollectionId":"20230811111144993902427153","latitude":"34.803482852876186","longitude":"113.54791592806578","showStatusSet":"[\\"ONLINE\\",\\"PREPARE\\"]","statusSet":"[\\"ONLINE\\",\\"PREPARE\\"]"}';
-    let reposePage = await elmRequestByApi(cookie, api, data);
+    let reposePage = await elmRequestByApi(cookie, api, data,encryptMobile);
     /// console.log(JSON.stringify(reposePage))
     if (!reposePage) {
         $.log("❌夺宝信息获取失败")
@@ -201,7 +204,7 @@ async function getDBAward(cookie, missionCollectionId, missionId,taskName,phone)
         return;
     }
     //console.log(JSON.stringify(reposePage))
-    $.sendLog("✅【"+phone+"】---"+taskName+" || 夺宝奖励领取成功")
+    $.sendLog("✅【"+phone+"】---"+taskName+" || 夺宝参与成功")
     return null;
 }
 
